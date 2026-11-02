@@ -16,13 +16,7 @@ const paddingLineBetweenStatements = [
 
 export default tseslint.config(
   {
-    ignores: [
-      '**/node_modules/**',
-      '**/coverage/**',
-      '**/dist/**',
-      '**/build/**',
-      '**/target/**',
-    ],
+    ignores: ['**/node_modules/**', '**/coverage/**', '**/dist/**', '**/build/**'],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
@@ -63,14 +57,20 @@ export default tseslint.config(
     },
   },
   {
-    files: ['**/*.ts', '**/*.mts', '**/*.cts'],
+    files: ['src/**/*.{ts,mts,cts}'],
     languageOptions: {
-      parserOptions: {
-        projectService: true,
-      },
+      globals: { ...globals.browser, ...globals.serviceworker },
+      parserOptions: { projectService: true },
     },
     rules: {
       '@typescript-eslint/no-floating-promises': ['error', { ignoreVoid: false }],
+    },
+  },
+  {
+    files: ['tests/**/*.{ts,mts,cts}'],
+    languageOptions: {
+      globals: { ...globals.node },
+      parserOptions: { projectService: true },
     },
   },
 );
