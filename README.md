@@ -1,76 +1,36 @@
-# OSS Repository Template
+# Extension Template
 
-A small, reusable baseline for independent open-source repositories.
+Minimal Chrome Manifest V3 starter using TypeScript, Vite, vanilla HTML/CSS, and Vitest.
 
-This repository contains language-agnostic repository hygiene plus optional tooling profiles.
+## Requirements
 
-## What's included
+- Node.js 26.13.0
+- pnpm 12
+- Chrome or Chromium
 
-### Core
-- EditorConfig defaults.
-- General-purpose Git ignore rules.
-- Conventional Commit message validation.
-- A Git hook installer that respects an existing `core.hooksPath`.
-- Pull request and contribution templates.
-- Guidance for branch protection and repository setup.
-
-### Optional profiles
-- `profiles/node-pnpm/` — Node.js + pnpm CI, formatting, linting, and hook conventions.
-- `profiles/typescript/` — ESLint flat config and Prettier defaults for JS/TS projects.
-
-Profiles are reference files. Copy only the files a project actually needs; do not blindly install every profile.
-
-## Create a repository from this template
-
-1. Create a public GitHub repository named `oss-template`.
-2. Push the contents of this repository to its `main` branch.
-3. Open **Settings → General → Template repository** and enable **Template repository**.
-4. For a new project, select **Use this template → Create a new repository**.
-5. Choose the owner, repository name, visibility, and create it.
-
-A repository created from a GitHub template gets its own history. It does not retrofit existing repositories.
-
-## Adopt the core hooks
-
-The core hook installer is a shell script and does not require Node.js:
+## Develop
 
 ```sh
-sh scripts/install-hooks.sh
+pnpm install
+pnpm dev
 ```
 
-It configures Git to use `.githooks/`.
+`pnpm dev` rebuilds `dist/` on changes. Reload the unpacked extension manually in `chrome://extensions`.
 
-The `commit-msg` hook enforces this Conventional Commit subject format:
+## Build
 
-```text
-type(scope): imperative description
+```sh
+pnpm build
 ```
 
-Examples:
+In Chrome, enable **Developer mode**, choose **Load unpacked**, and select `dist/`.
 
-```text
-feat(cache): add weighted eviction
-fix(shell): preserve focus after navigation
-docs: explain local development
-chore: update repository tooling
-```
+Run the quality checks with `pnpm check`.
 
-Allowed types are `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, and `revert`.
+## Start building
 
-## Adopt an optional profile
+- Edit `public/manifest.json` for the extension name, description, permissions, and icons.
+- Put popup markup, behavior, and styles in `src/popup/`.
+- Add a background service worker, content scripts, or an options page only when the extension needs them, and register each entry in the manifest and Vite configuration.
 
-Read the profile's `README.md` before copying files. Each profile documents:
-- Which files to copy.
-- Required development dependencies.
-- Required package scripts.
-- What is intentionally excluded.
-
-## Repository setup after creation
-
-Recommended baseline:
-- Protect `main`; require pull requests and passing CI before merge.
-- Require branches to be up to date if the project benefits from strict merge validation.
-- Enable Dependabot only for ecosystems the project actually uses.
-- Keep Actions permissions read-only by default; grant write permissions per job.
-- Pin third-party GitHub Actions to full commit SHAs and retain a version comment.
-- Keep release and deployment workflows out of the baseline unless the project needs them.
+Keep permissions narrow. MV3 service workers can be suspended, so persist required state rather than relying on module-level memory.
